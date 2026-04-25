@@ -14,6 +14,8 @@ import 'package:twake_calendar_mobile/features/auth/presentation/controllers/aut
 import 'package:twake_calendar_mobile/features/notifications/notifications_providers.dart';
 import 'package:twake_calendar_mobile/features/realtime/presentation/realtime_subscriptions_provider.dart';
 import 'package:twake_calendar_mobile/features/realtime/realtime_providers.dart';
+import 'package:twake_calendar_mobile/features/sync/domain/services/sync_coordinator_service.dart';
+import 'package:twake_calendar_mobile/features/sync/sync_providers.dart';
 
 /// One-shot bootstrap provider attaching the authentication + WS-alive
 /// interceptors to the singleton [DioClient], starting the realtime
@@ -63,6 +65,12 @@ final FutureProvider<void> kernelProvider = FutureProvider<void>(
     // Activate the WS subscriptions (sidebar selection -> register, inbound
     // messages -> provider invalidation).
     ref.watch(realtimeSubscriptionsProvider);
+
+    // Boot the sync coordinator: flushes the outbox once and listens to
+    // connectivity changes for subsequent retries.
+    final SyncCoordinatorService coordinator =
+        ref.watch(syncCoordinatorProvider);
+    await coordinator.start();
   },
   name: 'kernelProvider',
 );
