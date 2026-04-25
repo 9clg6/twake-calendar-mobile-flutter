@@ -11,4 +11,13 @@ abstract interface class EventRepository {
 
   /// Returns a single event by its CalDAV URL.
   Future<CalendarEventEntity?> fetchEvent(String url);
+
+  /// Creates or updates [event] (CalDAV PUT with jCal body).
+  Future<void> saveEvent(CalendarEventEntity event);
+
+  /// Deletes the event identified by [url].
+  Future<void> deleteEvent(String url);
+
+  /// Moves an event to another calendar.
+  Future<void> moveEvent({required String fromUrl, required String toUrl});
 }

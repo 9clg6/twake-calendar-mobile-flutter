@@ -6,6 +6,7 @@ import 'package:twake_calendar_mobile/features/events/domain/entities/attendee.d
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
 import 'package:twake_calendar_mobile/features/events/domain/enums/event_class.dart';
 import 'package:twake_calendar_mobile/features/events/domain/enums/partstat.dart';
+import 'package:twake_calendar_mobile/features/events/events_providers.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/extensions/calendar_event_x.dart';
 
 /// Read-only preview of a [CalendarEventEntity].
@@ -32,6 +33,16 @@ class EventPreviewScreen extends ConsumerWidget {
               padding: EdgeInsets.only(right: 12),
               child: Icon(Icons.lock_outline),
             ),
+          IconButton(
+            tooltip: context.l10n.actionsDelete,
+            icon: const Icon(Icons.delete_outline),
+            onPressed: () async {
+              await ref
+                  .read(deleteEventUseCaseProvider)
+                  .execute(event.url);
+              if (context.mounted) Navigator.of(context).pop();
+            },
+          ),
         ],
       ),
       body: ListView(

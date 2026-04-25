@@ -53,6 +53,24 @@ final class FakeEventRepository implements EventRepository {
   @override
   Future<CalendarEventEntity?> fetchEvent(String url) async => null;
 
+  @override
+  Future<void> saveEvent(CalendarEventEntity event) async {
+    // Fake repository: no-op (mutations are not persisted in dev mode).
+  }
+
+  @override
+  Future<void> deleteEvent(String url) async {
+    // Fake repository: no-op.
+  }
+
+  @override
+  Future<void> moveEvent({
+    required String fromUrl,
+    required String toUrl,
+  }) async {
+    // Fake repository: no-op.
+  }
+
   String _iso(DateTime date) =>
       '${date.year.toString().padLeft(4, '0')}-'
       '${date.month.toString().padLeft(2, '0')}-'

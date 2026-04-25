@@ -61,6 +61,23 @@ final class EventRepositoryImpl implements EventRepository {
   }
 
   @override
+  Future<void> saveEvent(CalendarEventEntity event) async {
+    final List<dynamic> jcal = _jcalCodec.buildVcalendar(event);
+    await _remoteDataSource.putEvent(eventPath: event.url, jcal: jcal);
+  }
+
+  @override
+  Future<void> deleteEvent(String url) =>
+      _remoteDataSource.deleteEvent(url);
+
+  @override
+  Future<void> moveEvent({
+    required String fromUrl,
+    required String toUrl,
+  }) =>
+      _remoteDataSource.moveEvent(fromPath: fromUrl, toUrl: toUrl);
+
+  @override
   Future<CalendarEventEntity?> fetchEvent(String url) async {
     final dynamic raw = await _remoteDataSource.fetchEvent(url);
     if (raw is! List<dynamic> || raw.length < 3) return null;

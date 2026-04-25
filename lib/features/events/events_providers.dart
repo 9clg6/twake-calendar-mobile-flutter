@@ -6,7 +6,9 @@ import 'package:twake_calendar_mobile/features/events/data/endpoints/caldav_even
 import 'package:twake_calendar_mobile/features/events/data/repositories/event_repository_impl.dart';
 import 'package:twake_calendar_mobile/features/events/data/repositories/fake_event_repository.dart';
 import 'package:twake_calendar_mobile/features/events/domain/repositories/event_repository.dart';
+import 'package:twake_calendar_mobile/features/events/domain/usecases/delete_event_usecase.dart';
 import 'package:twake_calendar_mobile/features/events/domain/usecases/get_events_in_range_usecase.dart';
+import 'package:twake_calendar_mobile/features/events/domain/usecases/save_event_usecase.dart';
 
 /// jCal codec singleton (parser + builder, stateless).
 final Provider<JCalCodec> jcalCodecProvider = Provider<JCalCodec>(
@@ -63,4 +65,22 @@ final Provider<GetEventsInRangeUseCase> getEventsInRangeUseCaseProvider =
     eventRepository: ref.watch(eventRepositoryProvider),
   ),
   name: 'getEventsInRangeUseCaseProvider',
+);
+
+/// `SaveEventUseCase` provider.
+final Provider<SaveEventUseCase> saveEventUseCaseProvider =
+    Provider<SaveEventUseCase>(
+  (Ref<SaveEventUseCase> ref) => SaveEventUseCase(
+    eventRepository: ref.watch(eventRepositoryProvider),
+  ),
+  name: 'saveEventUseCaseProvider',
+);
+
+/// `DeleteEventUseCase` provider.
+final Provider<DeleteEventUseCase> deleteEventUseCaseProvider =
+    Provider<DeleteEventUseCase>(
+  (Ref<DeleteEventUseCase> ref) => DeleteEventUseCase(
+    eventRepository: ref.watch(eventRepositoryProvider),
+  ),
+  name: 'deleteEventUseCaseProvider',
 );
