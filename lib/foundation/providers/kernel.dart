@@ -10,6 +10,7 @@ import 'package:twake_calendar_mobile/features/auth/auth_providers.dart';
 import 'package:twake_calendar_mobile/features/auth/domain/entities/auth_token.dart';
 import 'package:twake_calendar_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:twake_calendar_mobile/features/realtime/presentation/realtime_subscriptions_provider.dart';
 import 'package:twake_calendar_mobile/features/realtime/realtime_providers.dart';
 
 /// One-shot bootstrap provider attaching the authentication + WS-alive
@@ -52,6 +53,9 @@ final FutureProvider<void> kernelProvider = FutureProvider<void>(
     // Make sure the realtime bridge is materialized so it starts listening
     // to authControllerProvider transitions.
     ref.watch(realtimeBridgeProvider);
+    // Activate the WS subscriptions (sidebar selection -> register, inbound
+    // messages -> provider invalidation).
+    ref.watch(realtimeSubscriptionsProvider);
   },
   name: 'kernelProvider',
 );
