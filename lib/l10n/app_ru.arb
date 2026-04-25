@@ -1,0 +1,11 @@
+{
+  "@@locale": "ru",
+  "appName": "Twake Calendar",
+  "calendarPersonal": "Мои календари",
+  "calendarShared": "Общие календари",
+  "actionsSave": "Сохранить",
+  "actionsCancel": "Отмена",
+  "errorUnknown": "Произошла неизвестная ошибка",
+  "splashLoading": "Загрузка…",
+  "greeting": "Здравствуйте, {name}"
+}

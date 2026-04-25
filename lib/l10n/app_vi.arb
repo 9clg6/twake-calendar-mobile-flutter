@@ -1,0 +1,11 @@
+{
+  "@@locale": "vi",
+  "appName": "Twake Calendar",
+  "calendarPersonal": "Lịch của tôi",
+  "calendarShared": "Lịch được chia sẻ",
+  "actionsSave": "Lưu",
+  "actionsCancel": "Huỷ",
+  "errorUnknown": "Đã xảy ra lỗi không xác định",
+  "splashLoading": "Đang tải…",
+  "greeting": "Xin chào {name}"
+}
