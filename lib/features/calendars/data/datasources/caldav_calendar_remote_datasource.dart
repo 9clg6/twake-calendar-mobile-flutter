@@ -14,6 +14,21 @@ const Map<String, dynamic> _defaultScope = <String, dynamic>{
 abstract interface class CaldavCalendarRemoteDataSource {
   /// Lists every calendar accessible to [userId].
   Future<List<CalendarRemoteModel>> fetchCalendars({required String userId});
+
+  /// Creates a new personal calendar.
+  Future<void> createCalendar({
+    required String userId,
+    required Map<String, dynamic> body,
+  });
+
+  /// Updates the properties of a calendar via PROPPATCH.
+  Future<void> proppatchCalendar({
+    required String calLink,
+    required Map<String, dynamic> body,
+  });
+
+  /// Deletes a calendar.
+  Future<void> deleteCalendar({required String calLink});
 }
 
 /// Default implementation backed by [CaldavCalendarEndpoint].
@@ -34,4 +49,23 @@ final class CaldavCalendarRemoteDataSourceImpl
         await _endpoint.listCalendars(userId, _defaultScope);
     return response.embedded.calendars;
   }
+
+  @override
+  Future<void> createCalendar({
+    required String userId,
+    required Map<String, dynamic> body,
+  }) async {
+    await _endpoint.createCalendar(userId, body);
+  }
+
+  @override
+  Future<void> proppatchCalendar({
+    required String calLink,
+    required Map<String, dynamic> body,
+  }) =>
+      _endpoint.proppatchCalendar(calLink, body);
+
+  @override
+  Future<void> deleteCalendar({required String calLink}) =>
+      _endpoint.deleteCalendar(calLink);
 }

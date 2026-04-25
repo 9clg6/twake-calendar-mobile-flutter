@@ -5,7 +5,10 @@ import 'package:twake_calendar_mobile/features/calendars/data/endpoints/caldav_c
 import 'package:twake_calendar_mobile/features/calendars/data/repositories/calendar_repository_impl.dart';
 import 'package:twake_calendar_mobile/features/calendars/data/repositories/fake_calendar_repository.dart';
 import 'package:twake_calendar_mobile/features/calendars/domain/repositories/calendar_repository.dart';
+import 'package:twake_calendar_mobile/features/calendars/domain/usecases/create_calendar_usecase.dart';
+import 'package:twake_calendar_mobile/features/calendars/domain/usecases/delete_calendar_usecase.dart';
 import 'package:twake_calendar_mobile/features/calendars/domain/usecases/get_calendars_usecase.dart';
+import 'package:twake_calendar_mobile/features/calendars/domain/usecases/update_calendar_usecase.dart';
 import 'package:twake_calendar_mobile/shared/shared_providers.dart';
 
 /// CalDAV endpoint provider.
@@ -59,4 +62,31 @@ final Provider<GetCalendarsUseCase> getCalendarsUseCaseProvider =
     calendarRepository: ref.watch(calendarRepositoryProvider),
   ),
   name: 'getCalendarsUseCaseProvider',
+);
+
+/// `CreateCalendarUseCase` provider.
+final Provider<CreateCalendarUseCase> createCalendarUseCaseProvider =
+    Provider<CreateCalendarUseCase>(
+  (Ref<CreateCalendarUseCase> ref) => CreateCalendarUseCase(
+    calendarRepository: ref.watch(calendarRepositoryProvider),
+  ),
+  name: 'createCalendarUseCaseProvider',
+);
+
+/// `UpdateCalendarUseCase` provider.
+final Provider<UpdateCalendarUseCase> updateCalendarUseCaseProvider =
+    Provider<UpdateCalendarUseCase>(
+  (Ref<UpdateCalendarUseCase> ref) => UpdateCalendarUseCase(
+    calendarRepository: ref.watch(calendarRepositoryProvider),
+  ),
+  name: 'updateCalendarUseCaseProvider',
+);
+
+/// `DeleteCalendarUseCase` provider.
+final Provider<DeleteCalendarUseCase> deleteCalendarUseCaseProvider =
+    Provider<DeleteCalendarUseCase>(
+  (Ref<DeleteCalendarUseCase> ref) => DeleteCalendarUseCase(
+    calendarRepository: ref.watch(calendarRepositoryProvider),
+  ),
+  name: 'deleteCalendarUseCaseProvider',
 );

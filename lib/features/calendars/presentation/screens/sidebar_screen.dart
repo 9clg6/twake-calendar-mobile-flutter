@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/controllers/sidebar_controller.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/controllers/sidebar_state.dart';
+import 'package:twake_calendar_mobile/features/calendars/presentation/screens/calendar_form_dialog.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/widgets/calendar_section.dart';
 
 /// Sidebar listing the user's calendars, grouped by section.
@@ -17,6 +18,13 @@ class SidebarScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.calendarPersonal)),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showDialog<void>(
+          context: context,
+          builder: (_) => const CalendarFormDialog(),
+        ),
+        child: const Icon(Icons.add),
+      ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (Object e, StackTrace _) => Center(

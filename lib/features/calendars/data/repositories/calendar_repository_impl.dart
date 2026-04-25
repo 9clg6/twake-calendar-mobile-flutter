@@ -27,4 +27,43 @@ final class CalendarRepositoryImpl implements CalendarRepository {
         .map((CalendarRemoteModel m) => m.toEntity(owner: me))
         .toList(growable: false);
   }
+
+  @override
+  Future<void> createCalendar({
+    required String id,
+    required String name,
+    String? description,
+    String? color,
+  }) async {
+    final UserEntity me = await _userRepository.fetchCurrentUser();
+    await _remoteDataSource.createCalendar(
+      userId: me.openpaasId,
+      body: <String, dynamic>{
+        'id': id,
+        'dav:name': name,
+        if (description != null) 'caldav:description': description,
+        if (color != null) 'apple:color': color,
+      },
+    );
+  }
+
+  @override
+  Future<void> updateCalendar({
+    required String calendarLink,
+    String? name,
+    String? description,
+    String? color,
+  }) =>
+      _remoteDataSource.proppatchCalendar(
+        calLink: calendarLink,
+        body: <String, dynamic>{
+          if (name != null) 'dav:name': name,
+          if (description != null) 'caldav:description': description,
+          if (color != null) 'apple:color': color,
+        },
+      );
+
+  @override
+  Future<void> deleteCalendar(String calendarLink) =>
+      _remoteDataSource.deleteCalendar(calLink: calendarLink);
 }

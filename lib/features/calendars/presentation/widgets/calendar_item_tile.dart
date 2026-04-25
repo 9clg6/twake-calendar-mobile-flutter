@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
+import 'package:twake_calendar_mobile/features/calendars/calendars_providers.dart';
 import 'package:twake_calendar_mobile/features/calendars/domain/entities/calendar.dart';
+import 'package:twake_calendar_mobile/features/calendars/presentation/controllers/sidebar_controller.dart';
+import 'package:twake_calendar_mobile/features/calendars/presentation/screens/calendar_form_dialog.dart';
 
-/// Single row in the sidebar — checkbox + color square + calendar name.
-class CalendarItemTile extends StatelessWidget {
+/// Single row in the sidebar — checkbox + color square + name + context
+/// menu (edit / delete).
+class CalendarItemTile extends ConsumerWidget {
   /// Creates a [CalendarItemTile].
   const CalendarItemTile({
     required this.calendar,
@@ -22,9 +27,9 @@ class CalendarItemTile extends StatelessWidget {
   final VoidCallback onToggle;
 
   @override
-  Widget build(BuildContext context) {
-    final Color accent = _parseColor(calendar.colorLight) ??
-        context.colorScheme.primary;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Color accent =
+        _parseColor(calendar.colorLight) ?? context.colorScheme.primary;
     return InkWell(
       onTap: onToggle,
       child: Padding(
@@ -52,6 +57,54 @@ class CalendarItemTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+            PopupMenuButton<_CalendarAction>(
+              icon: const Icon(Icons.more_horiz),
+              onSelected: (_CalendarAction action) async {
+                switch (action) {
+                  case _CalendarAction.edit:
+                    await showDialog<void>(
+                      context: context,
+                      builder: (_) => CalendarFormDialog(existing: calendar),
+                    );
+                  case _CalendarAction.delete:
+                    final bool? confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext c) => AlertDialog(
+                        title: Text(c.l10n.calendarDelete),
+                        content: Text(c.l10n.calendarDeleteConfirm),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () =>
+                                Navigator.of(c).pop<bool>(false),
+                            child: Text(c.l10n.actionsCancel),
+                          ),
+                          FilledButton(
+                            onPressed: () =>
+                                Navigator.of(c).pop<bool>(true),
+                            child: Text(c.l10n.actionsDelete),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed != true) return;
+                    await ref
+                        .read(deleteCalendarUseCaseProvider)
+                        .execute(calendar.link);
+                    ref.invalidate(sidebarControllerProvider);
+                }
+              },
+              itemBuilder: (BuildContext c) =>
+                  <PopupMenuEntry<_CalendarAction>>[
+                PopupMenuItem<_CalendarAction>(
+                  value: _CalendarAction.edit,
+                  child: Text(c.l10n.actionsModify),
+                ),
+                PopupMenuItem<_CalendarAction>(
+                  value: _CalendarAction.delete,
+                  child: Text(c.l10n.actionsDelete),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -68,3 +121,5 @@ class CalendarItemTile extends StatelessWidget {
     return Color(parsed);
   }
 }
+
+enum _CalendarAction { edit, delete }

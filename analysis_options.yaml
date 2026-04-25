@@ -26,6 +26,7 @@ analyzer:
     missing_required_param: error
     record_literal_one_positional_no_trailing_comma: error
     invalid_annotation_target: ignore
+    use_null_aware_elements: ignore
 
   exclude:
     - lib/generated_plugin_registrant.dart

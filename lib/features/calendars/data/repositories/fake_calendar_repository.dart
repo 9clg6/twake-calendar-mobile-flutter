@@ -51,4 +51,29 @@ final class FakeCalendarRepository implements CalendarRepository {
       ),
     ];
   }
+
+  @override
+  Future<void> createCalendar({
+    required String id,
+    required String name,
+    String? description,
+    String? color,
+  }) async {
+    // Fake repository: no-op.
+  }
+
+  @override
+  Future<void> updateCalendar({
+    required String calendarLink,
+    String? name,
+    String? description,
+    String? color,
+  }) async {
+    // Fake repository: no-op.
+  }
+
+  @override
+  Future<void> deleteCalendar(String calendarLink) async {
+    // Fake repository: no-op.
+  }
 }
