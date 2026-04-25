@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
+import 'package:twake_calendar_mobile/features/events/domain/entities/repetition.dart';
 
 part 'event_form_state.freezed.dart';
 
@@ -16,6 +17,7 @@ abstract class EventFormState with _$EventFormState {
     required DateTime end,
     @Default(false) bool allday,
     @Default('Europe/Paris') String timezone,
+    RepetitionEntity? repetition,
     @Default(false) bool isSubmitting,
     String? error,
     @Default(false) bool didSubmit,
@@ -29,10 +31,12 @@ abstract class EventFormState with _$EventFormState {
         location: event.location ?? '',
         description: event.description ?? '',
         start: DateTime.parse(event.start),
-        end:
-            event.end == null ? DateTime.parse(event.start) : DateTime.parse(event.end!),
+        end: event.end == null
+            ? DateTime.parse(event.start)
+            : DateTime.parse(event.end!),
         allday: event.allday,
         timezone: event.timezone,
+        repetition: event.repetition,
       );
 
   /// Default empty state for the create flow.
