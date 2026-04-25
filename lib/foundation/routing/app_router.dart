@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:twake_calendar_mobile/features/shared/presentation/screens/calendar_layout_screen.dart';
+import 'package:twake_calendar_mobile/features/calendars/presentation/screens/sidebar_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/error_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/splash_screen.dart';
 
@@ -42,5 +42,5 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const CalendarLayoutScreen();
+      const SidebarScreen();
 }
