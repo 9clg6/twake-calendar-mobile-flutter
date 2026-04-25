@@ -2,33 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
-import 'package:twake_calendar_mobile/foundation/routing/app_router.dart';
 
-/// Initial splash screen displayed while the kernel boots.
+/// Initial splash screen displayed while the auth state hydrates.
 ///
-/// In the absence of a real auth state for the moment, jumps directly to the
-/// calendar layout once the first frame is rendered. The OIDC redirect logic
-/// will land in `features/auth/` and gate this navigation.
-class SplashScreen extends ConsumerStatefulWidget {
+/// The actual redirection to login or calendar layout is handled by the
+/// `redirect` callback of [SplashRoute] in `app_router.dart`.
+class SplashScreen extends ConsumerWidget {
   /// Creates a [SplashScreen].
   const SplashScreen({super.key});
 
   @override
-  ConsumerState<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends ConsumerState<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      const CalendarRoute().go(context);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Center(
         child: Column(

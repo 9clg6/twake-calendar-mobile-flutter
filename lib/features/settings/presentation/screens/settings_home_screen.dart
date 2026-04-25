@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
+import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:twake_calendar_mobile/features/settings/presentation/controllers/locale_controller.dart';
 
-/// Settings home — for now exposes only the language picker.
+/// Settings home — language picker + sign-out.
 class SettingsHomeScreen extends ConsumerWidget {
   /// Creates a [SettingsHomeScreen].
   const SettingsHomeScreen({super.key});
@@ -41,6 +42,13 @@ class SettingsHomeScreen extends ConsumerWidget {
                   ),
               ],
             ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: Icon(Icons.logout, color: context.colorScheme.error),
+            title: Text(context.l10n.errorAuth),
+            onTap: () =>
+                ref.read(authControllerProvider.notifier).signOut(),
           ),
         ],
       ),

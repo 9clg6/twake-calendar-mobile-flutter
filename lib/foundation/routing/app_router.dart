@@ -1,5 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_state.dart';
+import 'package:twake_calendar_mobile/features/auth/presentation/screens/login_screen.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/screens/sidebar_screen.dart';
 import 'package:twake_calendar_mobile/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/error_screen.dart';
@@ -7,7 +13,15 @@ import 'package:twake_calendar_mobile/features/shared/presentation/screens/splas
 
 part 'app_router.g.dart';
 
-/// Initial splash route. Decides where to redirect based on the auth state.
+/// Reads the synchronous auth status from the [authControllerProvider]
+/// container attached to [context]. `redirect` callbacks must stay
+/// synchronous, so this helper is the only way to peek at the state from a
+/// `GoRouteData.redirect`.
+AuthState _readAuth(BuildContext context) =>
+    ProviderScope.containerOf(context).read(authControllerProvider);
+
+/// Initial splash route. Redirects to login when no token is available, to
+/// the calendar layout otherwise.
 @TypedGoRoute<SplashRoute>(path: '/')
 @immutable
 class SplashRoute extends GoRouteData with _$SplashRoute {
@@ -15,11 +29,38 @@ class SplashRoute extends GoRouteData with _$SplashRoute {
   const SplashRoute();
 
   @override
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    final AuthState auth = _readAuth(context);
+    if (auth.isLoading) return null;
+    return auth.isLoggedIn
+        ? const CalendarRoute().location
+        : const LoginRoute().location;
+  }
+
+  @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SplashScreen();
 }
 
-/// Generic error route, displayed when [GoRouter] cannot resolve a path.
+/// Login route — drives the OIDC sign-in flow.
+@TypedGoRoute<LoginRoute>(path: '/login')
+@immutable
+class LoginRoute extends GoRouteData with _$LoginRoute {
+  /// Creates a [LoginRoute].
+  const LoginRoute();
+
+  @override
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    final AuthState auth = _readAuth(context);
+    return auth.isLoggedIn ? const CalendarRoute().location : null;
+  }
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const LoginScreen();
+}
+
+/// Generic error route.
 @TypedGoRoute<ErrorRoute>(path: '/error')
 @immutable
 class ErrorRoute extends GoRouteData with _$ErrorRoute {
@@ -45,6 +86,13 @@ class ErrorRoute extends GoRouteData with _$ErrorRoute {
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   /// Creates a [CalendarRoute].
   const CalendarRoute();
+
+  @override
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    final AuthState auth = _readAuth(context);
+    if (auth.isLoading) return null;
+    return auth.isLoggedIn ? null : const LoginRoute().location;
+  }
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
