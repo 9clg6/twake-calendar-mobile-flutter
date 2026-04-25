@@ -29,6 +29,11 @@ class MonthViewScreen extends ConsumerWidget {
             onPressed: () => const SidebarRoute().push<void>(context),
           ),
           IconButton(
+            icon: const Icon(Icons.search),
+            tooltip: context.l10n.searchTitle,
+            onPressed: () => const SearchRoute().push<void>(context),
+          ),
+          IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: context.l10n.settingsTitle,
             onPressed: () => const SettingsRoute().push<void>(context),

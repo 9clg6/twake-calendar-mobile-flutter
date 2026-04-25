@@ -8,6 +8,7 @@ import 'package:twake_calendar_mobile/features/auth/presentation/controllers/aut
 import 'package:twake_calendar_mobile/features/auth/presentation/screens/login_screen.dart';
 import 'package:twake_calendar_mobile/features/calendar_view/presentation/screens/month_view_screen.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/screens/sidebar_screen.dart';
+import 'package:twake_calendar_mobile/features/search/presentation/screens/search_screen.dart';
 import 'package:twake_calendar_mobile/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/error_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/splash_screen.dart';
@@ -81,6 +82,7 @@ class ErrorRoute extends GoRouteData with _$ErrorRoute {
   path: '/calendar',
   routes: <TypedGoRoute<GoRouteData>>[
     TypedGoRoute<SidebarRoute>(path: 'sidebar'),
+    TypedGoRoute<SearchRoute>(path: 'search'),
     TypedGoRoute<SettingsRoute>(path: 'settings'),
   ],
 )
@@ -121,4 +123,15 @@ class SettingsRoute extends GoRouteData with _$SettingsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SettingsHomeScreen();
+}
+
+/// Search route — events search backed by the side-service endpoint.
+@immutable
+class SearchRoute extends GoRouteData with _$SearchRoute {
+  /// Creates a [SearchRoute].
+  const SearchRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SearchScreen();
 }
