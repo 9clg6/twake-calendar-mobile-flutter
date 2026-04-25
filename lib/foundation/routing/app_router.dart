@@ -8,6 +8,7 @@ import 'package:twake_calendar_mobile/features/auth/presentation/controllers/aut
 import 'package:twake_calendar_mobile/features/auth/presentation/screens/login_screen.dart';
 import 'package:twake_calendar_mobile/features/calendar_view/presentation/screens/month_view_screen.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/screens/sidebar_screen.dart';
+import 'package:twake_calendar_mobile/features/events/presentation/screens/event_form_screen.dart';
 import 'package:twake_calendar_mobile/features/search/presentation/screens/search_screen.dart';
 import 'package:twake_calendar_mobile/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/error_screen.dart';
@@ -86,6 +87,7 @@ class ErrorRoute extends GoRouteData with _$ErrorRoute {
     TypedGoRoute<SearchRoute>(path: 'search'),
     TypedGoRoute<SettingsRoute>(path: 'settings'),
     TypedGoRoute<ConflictsRoute>(path: 'conflicts'),
+    TypedGoRoute<EventCreateRoute>(path: 'events/new'),
   ],
 )
 @immutable
@@ -147,4 +149,15 @@ class ConflictsRoute extends GoRouteData with _$ConflictsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ConflictResolutionScreen();
+}
+
+/// Event create route — opens an empty event form.
+@immutable
+class EventCreateRoute extends GoRouteData with _$EventCreateRoute {
+  /// Creates an [EventCreateRoute].
+  const EventCreateRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EventFormScreen();
 }

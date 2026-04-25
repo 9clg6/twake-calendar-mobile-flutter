@@ -42,6 +42,11 @@ class MonthViewScreen extends ConsumerWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => const EventCreateRoute().push<void>(context),
+        icon: const Icon(Icons.add),
+        label: Text(context.l10n.eventCreate),
+      ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (Object e, StackTrace _) => Center(
