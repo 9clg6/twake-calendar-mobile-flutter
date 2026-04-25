@@ -6,6 +6,7 @@ import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
 import 'package:twake_calendar_mobile/features/calendar_view/presentation/controllers/month_view_controller.dart';
 import 'package:twake_calendar_mobile/features/calendar_view/presentation/controllers/month_view_state.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
+import 'package:twake_calendar_mobile/features/events/presentation/screens/event_preview_screen.dart';
 import 'package:twake_calendar_mobile/foundation/routing/app_router.dart';
 
 /// Calendar layout — month view at the top, agenda of the selected day below.
@@ -98,7 +99,12 @@ class _MonthViewBody extends ConsumerWidget {
                     return ListTile(
                       title: Text(event.title ?? ''),
                       subtitle: Text(_formatRange(event)),
-                      onTap: () {},
+                      onTap: () => Navigator.of(c).push<void>(
+                        MaterialPageRoute<void>(
+                          builder: (_) =>
+                              EventPreviewScreen(event: event),
+                        ),
+                      ),
                     );
                   },
                 ),
