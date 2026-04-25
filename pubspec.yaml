@@ -87,6 +87,11 @@ dev_dependencies:
   drift_dev: ^2.21.0
   # Tests
   mockito: ^5.4.4
+  mocktail: ^1.0.4
+  integration_test:
+    sdk: flutter
+  patrol: ^3.13.0
+  patrol_finders: ^2.5.0
 
 flutter:
   uses-material-design: true

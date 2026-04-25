@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart' show Dio;
+import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:twake_calendar_mobile/features/search/data/models/search_request.remote_model.dart';
 import 'package:twake_calendar_mobile/features/search/data/models/search_response.remote_model.dart';

@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart' show Dio;
+import 'package:dio/dio.dart' hide Headers;
 import 'package:retrofit/retrofit.dart';
 import 'package:twake_calendar_mobile/features/events/data/models/event_report.remote_model.dart';
 
