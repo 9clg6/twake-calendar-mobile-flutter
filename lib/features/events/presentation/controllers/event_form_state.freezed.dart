@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EventFormState {
 
- String get calendarId; String get title; String get location; String get description; DateTime get start; DateTime get end; bool get allday; String get timezone; RepetitionEntity? get repetition; bool get isSubmitting; String? get error; bool get didSubmit;
+ String get calendarId; String get title; String get location; String get description; DateTime get start; DateTime get end; bool get allday; String get timezone; RepetitionEntity? get repetition; List<AttendeeEntity> get attendees; bool get isSubmitting; String? get error; bool get didSubmit;
 /// Create a copy of EventFormState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $EventFormStateCopyWith<EventFormState> get copyWith => _$EventFormStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventFormState&&(identical(other.calendarId, calendarId) || other.calendarId == calendarId)&&(identical(other.title, title) || other.title == title)&&(identical(other.location, location) || other.location == location)&&(identical(other.description, description) || other.description == description)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.allday, allday) || other.allday == allday)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.repetition, repetition) || other.repetition == repetition)&&(identical(other.isSubmitting, isSubmitting) || other.isSubmitting == isSubmitting)&&(identical(other.error, error) || other.error == error)&&(identical(other.didSubmit, didSubmit) || other.didSubmit == didSubmit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventFormState&&(identical(other.calendarId, calendarId) || other.calendarId == calendarId)&&(identical(other.title, title) || other.title == title)&&(identical(other.location, location) || other.location == location)&&(identical(other.description, description) || other.description == description)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.allday, allday) || other.allday == allday)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.repetition, repetition) || other.repetition == repetition)&&const DeepCollectionEquality().equals(other.attendees, attendees)&&(identical(other.isSubmitting, isSubmitting) || other.isSubmitting == isSubmitting)&&(identical(other.error, error) || other.error == error)&&(identical(other.didSubmit, didSubmit) || other.didSubmit == didSubmit));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,calendarId,title,location,description,start,end,allday,timezone,repetition,isSubmitting,error,didSubmit);
+int get hashCode => Object.hash(runtimeType,calendarId,title,location,description,start,end,allday,timezone,repetition,const DeepCollectionEquality().hash(attendees),isSubmitting,error,didSubmit);
 
 @override
 String toString() {
-  return 'EventFormState(calendarId: $calendarId, title: $title, location: $location, description: $description, start: $start, end: $end, allday: $allday, timezone: $timezone, repetition: $repetition, isSubmitting: $isSubmitting, error: $error, didSubmit: $didSubmit)';
+  return 'EventFormState(calendarId: $calendarId, title: $title, location: $location, description: $description, start: $start, end: $end, allday: $allday, timezone: $timezone, repetition: $repetition, attendees: $attendees, isSubmitting: $isSubmitting, error: $error, didSubmit: $didSubmit)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $EventFormStateCopyWith<$Res>  {
   factory $EventFormStateCopyWith(EventFormState value, $Res Function(EventFormState) _then) = _$EventFormStateCopyWithImpl;
 @useResult
 $Res call({
- String calendarId, String title, String location, String description, DateTime start, DateTime end, bool allday, String timezone, RepetitionEntity? repetition, bool isSubmitting, String? error, bool didSubmit
+ String calendarId, String title, String location, String description, DateTime start, DateTime end, bool allday, String timezone, RepetitionEntity? repetition, List<AttendeeEntity> attendees, bool isSubmitting, String? error, bool didSubmit
 });
 
 
@@ -63,7 +63,7 @@ class _$EventFormStateCopyWithImpl<$Res>
 
 /// Create a copy of EventFormState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? calendarId = null,Object? title = null,Object? location = null,Object? description = null,Object? start = null,Object? end = null,Object? allday = null,Object? timezone = null,Object? repetition = freezed,Object? isSubmitting = null,Object? error = freezed,Object? didSubmit = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? calendarId = null,Object? title = null,Object? location = null,Object? description = null,Object? start = null,Object? end = null,Object? allday = null,Object? timezone = null,Object? repetition = freezed,Object? attendees = null,Object? isSubmitting = null,Object? error = freezed,Object? didSubmit = null,}) {
   return _then(_self.copyWith(
 calendarId: null == calendarId ? _self.calendarId : calendarId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as DateTime,end: null == end ? _self.end : end // ignore: cast_nullable_to_non_n
 as DateTime,allday: null == allday ? _self.allday : allday // ignore: cast_nullable_to_non_nullable
 as bool,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
 as String,repetition: freezed == repetition ? _self.repetition : repetition // ignore: cast_nullable_to_non_nullable
-as RepetitionEntity?,isSubmitting: null == isSubmitting ? _self.isSubmitting : isSubmitting // ignore: cast_nullable_to_non_nullable
+as RepetitionEntity?,attendees: null == attendees ? _self.attendees : attendees // ignore: cast_nullable_to_non_nullable
+as List<AttendeeEntity>,isSubmitting: null == isSubmitting ? _self.isSubmitting : isSubmitting // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,didSubmit: null == didSubmit ? _self.didSubmit : didSubmit // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -100,7 +101,7 @@ $RepetitionEntityCopyWith<$Res>? get repetition {
 
 
 class _EventFormState implements EventFormState {
-  const _EventFormState({required this.calendarId, this.title = '', this.location = '', this.description = '', required this.start, required this.end, this.allday = false, this.timezone = 'Europe/Paris', this.repetition, this.isSubmitting = false, this.error, this.didSubmit = false});
+  const _EventFormState({required this.calendarId, this.title = '', this.location = '', this.description = '', required this.start, required this.end, this.allday = false, this.timezone = 'Europe/Paris', this.repetition, final  List<AttendeeEntity> attendees = const <AttendeeEntity>[], this.isSubmitting = false, this.error, this.didSubmit = false}): _attendees = attendees;
   
 
 @override final  String calendarId;
@@ -112,6 +113,13 @@ class _EventFormState implements EventFormState {
 @override@JsonKey() final  bool allday;
 @override@JsonKey() final  String timezone;
 @override final  RepetitionEntity? repetition;
+ final  List<AttendeeEntity> _attendees;
+@override@JsonKey() List<AttendeeEntity> get attendees {
+  if (_attendees is EqualUnmodifiableListView) return _attendees;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_attendees);
+}
+
 @override@JsonKey() final  bool isSubmitting;
 @override final  String? error;
 @override@JsonKey() final  bool didSubmit;
@@ -126,16 +134,16 @@ _$EventFormStateCopyWith<_EventFormState> get copyWith => __$EventFormStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventFormState&&(identical(other.calendarId, calendarId) || other.calendarId == calendarId)&&(identical(other.title, title) || other.title == title)&&(identical(other.location, location) || other.location == location)&&(identical(other.description, description) || other.description == description)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.allday, allday) || other.allday == allday)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.repetition, repetition) || other.repetition == repetition)&&(identical(other.isSubmitting, isSubmitting) || other.isSubmitting == isSubmitting)&&(identical(other.error, error) || other.error == error)&&(identical(other.didSubmit, didSubmit) || other.didSubmit == didSubmit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventFormState&&(identical(other.calendarId, calendarId) || other.calendarId == calendarId)&&(identical(other.title, title) || other.title == title)&&(identical(other.location, location) || other.location == location)&&(identical(other.description, description) || other.description == description)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.allday, allday) || other.allday == allday)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.repetition, repetition) || other.repetition == repetition)&&const DeepCollectionEquality().equals(other._attendees, _attendees)&&(identical(other.isSubmitting, isSubmitting) || other.isSubmitting == isSubmitting)&&(identical(other.error, error) || other.error == error)&&(identical(other.didSubmit, didSubmit) || other.didSubmit == didSubmit));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,calendarId,title,location,description,start,end,allday,timezone,repetition,isSubmitting,error,didSubmit);
+int get hashCode => Object.hash(runtimeType,calendarId,title,location,description,start,end,allday,timezone,repetition,const DeepCollectionEquality().hash(_attendees),isSubmitting,error,didSubmit);
 
 @override
 String toString() {
-  return 'EventFormState(calendarId: $calendarId, title: $title, location: $location, description: $description, start: $start, end: $end, allday: $allday, timezone: $timezone, repetition: $repetition, isSubmitting: $isSubmitting, error: $error, didSubmit: $didSubmit)';
+  return 'EventFormState(calendarId: $calendarId, title: $title, location: $location, description: $description, start: $start, end: $end, allday: $allday, timezone: $timezone, repetition: $repetition, attendees: $attendees, isSubmitting: $isSubmitting, error: $error, didSubmit: $didSubmit)';
 }
 
 
@@ -146,7 +154,7 @@ abstract mixin class _$EventFormStateCopyWith<$Res> implements $EventFormStateCo
   factory _$EventFormStateCopyWith(_EventFormState value, $Res Function(_EventFormState) _then) = __$EventFormStateCopyWithImpl;
 @override @useResult
 $Res call({
- String calendarId, String title, String location, String description, DateTime start, DateTime end, bool allday, String timezone, RepetitionEntity? repetition, bool isSubmitting, String? error, bool didSubmit
+ String calendarId, String title, String location, String description, DateTime start, DateTime end, bool allday, String timezone, RepetitionEntity? repetition, List<AttendeeEntity> attendees, bool isSubmitting, String? error, bool didSubmit
 });
 
 
@@ -163,7 +171,7 @@ class __$EventFormStateCopyWithImpl<$Res>
 
 /// Create a copy of EventFormState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? calendarId = null,Object? title = null,Object? location = null,Object? description = null,Object? start = null,Object? end = null,Object? allday = null,Object? timezone = null,Object? repetition = freezed,Object? isSubmitting = null,Object? error = freezed,Object? didSubmit = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? calendarId = null,Object? title = null,Object? location = null,Object? description = null,Object? start = null,Object? end = null,Object? allday = null,Object? timezone = null,Object? repetition = freezed,Object? attendees = null,Object? isSubmitting = null,Object? error = freezed,Object? didSubmit = null,}) {
   return _then(_EventFormState(
 calendarId: null == calendarId ? _self.calendarId : calendarId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -174,7 +182,8 @@ as DateTime,end: null == end ? _self.end : end // ignore: cast_nullable_to_non_n
 as DateTime,allday: null == allday ? _self.allday : allday // ignore: cast_nullable_to_non_nullable
 as bool,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
 as String,repetition: freezed == repetition ? _self.repetition : repetition // ignore: cast_nullable_to_non_nullable
-as RepetitionEntity?,isSubmitting: null == isSubmitting ? _self.isSubmitting : isSubmitting // ignore: cast_nullable_to_non_nullable
+as RepetitionEntity?,attendees: null == attendees ? _self._attendees : attendees // ignore: cast_nullable_to_non_nullable
+as List<AttendeeEntity>,isSubmitting: null == isSubmitting ? _self.isSubmitting : isSubmitting // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,didSubmit: null == didSubmit ? _self.didSubmit : didSubmit // ignore: cast_nullable_to_non_nullable
 as bool,

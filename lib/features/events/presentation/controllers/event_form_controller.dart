@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twake_calendar_mobile/core/interfaces/result_state.dart';
+import 'package:twake_calendar_mobile/features/events/domain/entities/attendee.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/repetition.dart';
 import 'package:twake_calendar_mobile/features/events/domain/usecases/save_event_usecase.dart';
@@ -44,6 +45,9 @@ final class EventFormController
 
   void onRepetitionChanged(RepetitionEntity? value) =>
       _patch(state.value?.copyWith(repetition: value));
+
+  void onAttendeesChanged(List<AttendeeEntity> value) =>
+      _patch(state.value?.copyWith(attendees: value));
 
   /// Submits the form. Returns true on success.
   Future<bool> submit() async {
@@ -97,6 +101,7 @@ final class EventFormController
       description: s.description.isEmpty ? null : s.description,
       allday: s.allday,
       repetition: s.repetition,
+      attendees: s.attendees,
     );
   }
 }

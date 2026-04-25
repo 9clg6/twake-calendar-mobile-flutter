@@ -5,6 +5,7 @@ import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/controllers/event_form_state.dart';
+import 'package:twake_calendar_mobile/features/events/presentation/widgets/attendee_search_field.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/widgets/recurrence_field.dart';
 
 /// Minimal create / edit form for an event.
@@ -95,6 +96,11 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
             RecurrenceField(
               value: state.repetition,
               onChanged: controller.onRepetitionChanged,
+            ),
+            const Gap(12),
+            AttendeeSearchField(
+              attendees: state.attendees,
+              onChanged: controller.onAttendeesChanged,
             ),
             const Gap(12),
             TextField(

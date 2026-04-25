@@ -6,6 +6,7 @@ import 'package:twake_calendar_mobile/features/events/domain/entities/attendee.d
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
 import 'package:twake_calendar_mobile/features/events/domain/enums/event_class.dart';
 import 'package:twake_calendar_mobile/features/events/domain/enums/partstat.dart';
+import 'package:twake_calendar_mobile/features/events/domain/usecases/update_partstat_usecase.dart';
 import 'package:twake_calendar_mobile/features/events/events_providers.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/extensions/calendar_event_x.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/screens/event_form_screen.dart';
@@ -98,9 +99,59 @@ class EventPreviewScreen extends ConsumerWidget {
             const Gap(8),
             for (final AttendeeEntity attendee in event.attendees)
               _AttendeeRow(attendee: attendee),
+            const Gap(16),
+            _RsvpButtons(event: event),
           ],
         ],
       ),
+    );
+  }
+}
+
+class _RsvpButtons extends ConsumerWidget {
+  const _RsvpButtons({required this.event});
+
+  final CalendarEventEntity event;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    Future<void> apply(Partstat next) async {
+      final AttendeeEntity me = event.attendees.firstWhere(
+        (AttendeeEntity a) => a.partstat == Partstat.needsAction ||
+            a.partstat == Partstat.accepted ||
+            a.partstat == Partstat.declined ||
+            a.partstat == Partstat.tentative,
+        orElse: () => event.attendees.first,
+      );
+      await ref.read(updatePartstatUseCaseProvider).execute(
+            UpdatePartstatParams(
+              event: event,
+              attendeeAddress: me.calAddress,
+              partstat: next,
+            ),
+          );
+      if (context.mounted) Navigator.of(context).pop();
+    }
+
+    return Wrap(
+      spacing: 8,
+      children: <Widget>[
+        OutlinedButton.icon(
+          icon: const Icon(Icons.check),
+          label: Text(context.l10n.eventRsvpAccept),
+          onPressed: () => apply(Partstat.accepted),
+        ),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.help_outline),
+          label: Text(context.l10n.eventRsvpTentative),
+          onPressed: () => apply(Partstat.tentative),
+        ),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.close),
+          label: Text(context.l10n.eventRsvpDecline),
+          onPressed: () => apply(Partstat.declined),
+        ),
+      ],
     );
   }
 }

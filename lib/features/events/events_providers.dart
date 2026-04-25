@@ -9,6 +9,7 @@ import 'package:twake_calendar_mobile/features/events/domain/repositories/event_
 import 'package:twake_calendar_mobile/features/events/domain/usecases/delete_event_usecase.dart';
 import 'package:twake_calendar_mobile/features/events/domain/usecases/get_events_in_range_usecase.dart';
 import 'package:twake_calendar_mobile/features/events/domain/usecases/save_event_usecase.dart';
+import 'package:twake_calendar_mobile/features/events/domain/usecases/update_partstat_usecase.dart';
 
 /// jCal codec singleton (parser + builder, stateless).
 final Provider<JCalCodec> jcalCodecProvider = Provider<JCalCodec>(
@@ -83,4 +84,13 @@ final Provider<DeleteEventUseCase> deleteEventUseCaseProvider =
     eventRepository: ref.watch(eventRepositoryProvider),
   ),
   name: 'deleteEventUseCaseProvider',
+);
+
+/// `UpdatePartstatUseCase` provider.
+final Provider<UpdatePartstatUseCase> updatePartstatUseCaseProvider =
+    Provider<UpdatePartstatUseCase>(
+  (Ref<UpdatePartstatUseCase> ref) => UpdatePartstatUseCase(
+    eventRepository: ref.watch(eventRepositoryProvider),
+  ),
+  name: 'updatePartstatUseCaseProvider',
 );
