@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_state.dart';
 import 'package:twake_calendar_mobile/features/auth/presentation/screens/login_screen.dart';
-import 'package:twake_calendar_mobile/features/calendar_view/presentation/screens/month_view_screen.dart';
+import 'package:twake_calendar_mobile/features/calendar_view/presentation/screens/calendar_layout_screen.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/screens/sidebar_screen.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/screens/event_form_screen.dart';
 import 'package:twake_calendar_mobile/features/search/presentation/screens/search_screen.dart';
@@ -104,7 +104,7 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const MonthViewScreen();
+      const CalendarLayoutScreen();
 }
 
 /// Sidebar (calendars list) — pushed from the month view app bar.

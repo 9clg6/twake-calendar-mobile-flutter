@@ -3,22 +3,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
+import 'package:twake_calendar_mobile/features/calendar_view/domain/enums/calendar_view_kind.dart';
 import 'package:twake_calendar_mobile/features/calendar_view/presentation/controllers/month_view_controller.dart';
 import 'package:twake_calendar_mobile/features/calendar_view/presentation/controllers/month_view_state.dart';
+import 'package:twake_calendar_mobile/features/calendar_view/presentation/controllers/view_kind_controller.dart';
+import 'package:twake_calendar_mobile/features/calendar_view/presentation/screens/day_view_screen.dart';
+import 'package:twake_calendar_mobile/features/calendar_view/presentation/screens/week_view_screen.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/screens/event_preview_screen.dart';
 import 'package:twake_calendar_mobile/features/sync/sync_providers.dart';
 import 'package:twake_calendar_mobile/foundation/routing/app_router.dart';
 
-/// Calendar layout — month view at the top, agenda of the selected day below.
-class MonthViewScreen extends ConsumerWidget {
-  /// Creates a [MonthViewScreen].
-  const MonthViewScreen({super.key});
+/// Top-level calendar layout. Switches between month/week/day views based
+/// on [viewKindControllerProvider]. Hosts the shared AppBar (search,
+/// sidebar, settings, conflicts badge) and the create-event FAB.
+class CalendarLayoutScreen extends ConsumerWidget {
+  /// Creates a [CalendarLayoutScreen].
+  const CalendarLayoutScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<MonthViewState> async =
-        ref.watch(monthViewControllerProvider);
+    final CalendarViewKind kind = ref.watch(viewKindControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,6 +40,32 @@ class MonthViewScreen extends ConsumerWidget {
             onPressed: () => const SearchRoute().push<void>(context),
           ),
           _ConflictsBadge(),
+          PopupMenuButton<CalendarViewKind>(
+            tooltip: context.l10n.viewMonth,
+            initialValue: kind,
+            onSelected: ref
+                .read(viewKindControllerProvider.notifier)
+                .switchTo,
+            icon: Icon(switch (kind) {
+              CalendarViewKind.month => Icons.calendar_view_month,
+              CalendarViewKind.week => Icons.calendar_view_week,
+              CalendarViewKind.day => Icons.calendar_view_day,
+            }),
+            itemBuilder: (BuildContext c) => <PopupMenuEntry<CalendarViewKind>>[
+              PopupMenuItem<CalendarViewKind>(
+                value: CalendarViewKind.month,
+                child: Text(c.l10n.viewMonth),
+              ),
+              PopupMenuItem<CalendarViewKind>(
+                value: CalendarViewKind.week,
+                child: Text(c.l10n.viewWeek),
+              ),
+              PopupMenuItem<CalendarViewKind>(
+                value: CalendarViewKind.day,
+                child: Text(c.l10n.viewDay),
+              ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: context.l10n.settingsTitle,
@@ -47,23 +78,40 @@ class MonthViewScreen extends ConsumerWidget {
         icon: const Icon(Icons.add),
         label: Text(context.l10n.eventCreate),
       ),
-      body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (Object e, StackTrace _) => Center(
-          child: Text(
-            context.l10n.errorUnknown,
-            style: context.textTheme.bodyLarge,
-          ),
-        ),
-        data: (MonthViewState state) => _MonthViewBody(state: state),
-      ),
+      body: switch (kind) {
+        CalendarViewKind.month => const MonthViewBody(),
+        CalendarViewKind.week => const WeekViewScreen(),
+        CalendarViewKind.day => const DayViewScreen(),
+      },
     );
   }
 }
 
-class _MonthViewBody extends ConsumerWidget {
-  const _MonthViewBody({required this.state});
+/// Month view body — the existing TableCalendar + agenda combo extracted
+/// from the previous MonthViewScreen.
+class MonthViewBody extends ConsumerWidget {
+  /// Creates a [MonthViewBody].
+  const MonthViewBody({super.key});
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<MonthViewState> async =
+        ref.watch(monthViewControllerProvider);
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (Object e, StackTrace _) => Center(
+        child: Text(
+          context.l10n.errorUnknown,
+          style: context.textTheme.bodyLarge,
+        ),
+      ),
+      data: (MonthViewState state) => _MonthBody(state: state),
+    );
+  }
+}
+
+class _MonthBody extends ConsumerWidget {
+  const _MonthBody({required this.state});
   final MonthViewState state;
 
   @override
@@ -113,8 +161,7 @@ class _MonthViewBody extends ConsumerWidget {
                       subtitle: Text(_formatRange(event)),
                       onTap: () => Navigator.of(c).push<void>(
                         MaterialPageRoute<void>(
-                          builder: (_) =>
-                              EventPreviewScreen(event: event),
+                          builder: (_) => EventPreviewScreen(event: event),
                         ),
                       ),
                     );
@@ -135,7 +182,8 @@ class _MonthViewBody extends ConsumerWidget {
   }
 
   String _hhmm(DateTime d) =>
-      '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+      '${d.hour.toString().padLeft(2, '0')}:'
+      '${d.minute.toString().padLeft(2, '0')}';
 }
 
 class _ConflictsBadge extends ConsumerWidget {
