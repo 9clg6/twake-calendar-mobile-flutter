@@ -63,6 +63,7 @@ dependencies:
   flutter_svg: ^2.0.16
   lottie: ^3.2.0
   gap: ^3.0.1
+  table_calendar: ^3.1.2
 
   # Utilities
   collection: ^1.18.0

@@ -93,6 +93,7 @@ RouteBase get $calendarRoute => GoRouteData.$route(
 
   factory: _$CalendarRoute._fromState,
   routes: [
+    GoRouteData.$route(path: 'sidebar', factory: _$SidebarRoute._fromState),
     GoRouteData.$route(path: 'settings', factory: _$SettingsRoute._fromState),
   ],
 );
@@ -102,6 +103,26 @@ mixin _$CalendarRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/calendar');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$SidebarRoute on GoRouteData {
+  static SidebarRoute _fromState(GoRouterState state) => const SidebarRoute();
+
+  @override
+  String get location => GoRouteData.$location('/calendar/sidebar');
 
   @override
   void go(BuildContext context) => context.go(location);

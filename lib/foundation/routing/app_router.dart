@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_state.dart';
 import 'package:twake_calendar_mobile/features/auth/presentation/screens/login_screen.dart';
+import 'package:twake_calendar_mobile/features/calendar_view/presentation/screens/month_view_screen.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/screens/sidebar_screen.dart';
 import 'package:twake_calendar_mobile/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/error_screen.dart';
@@ -75,10 +76,11 @@ class ErrorRoute extends GoRouteData with _$ErrorRoute {
       ErrorScreen(message: message);
 }
 
-/// Main calendar layout route, parent of every authenticated screen.
+/// Main calendar layout (month view).
 @TypedGoRoute<CalendarRoute>(
   path: '/calendar',
   routes: <TypedGoRoute<GoRouteData>>[
+    TypedGoRoute<SidebarRoute>(path: 'sidebar'),
     TypedGoRoute<SettingsRoute>(path: 'settings'),
   ],
 )
@@ -96,10 +98,21 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
+      const MonthViewScreen();
+}
+
+/// Sidebar (calendars list) — pushed from the month view app bar.
+@immutable
+class SidebarRoute extends GoRouteData with _$SidebarRoute {
+  /// Creates a [SidebarRoute].
+  const SidebarRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
       const SidebarScreen();
 }
 
-/// Settings home route — accessible from the sidebar app bar.
+/// Settings home route — accessible from the calendar layout app bar.
 @immutable
 class SettingsRoute extends GoRouteData with _$SettingsRoute {
   /// Creates a [SettingsRoute].
