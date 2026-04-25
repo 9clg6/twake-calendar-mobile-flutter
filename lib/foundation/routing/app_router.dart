@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/screens/sidebar_screen.dart';
+import 'package:twake_calendar_mobile/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/error_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/splash_screen.dart';
 
@@ -34,7 +35,12 @@ class ErrorRoute extends GoRouteData with _$ErrorRoute {
 }
 
 /// Main calendar layout route, parent of every authenticated screen.
-@TypedGoRoute<CalendarRoute>(path: '/calendar')
+@TypedGoRoute<CalendarRoute>(
+  path: '/calendar',
+  routes: <TypedGoRoute<GoRouteData>>[
+    TypedGoRoute<SettingsRoute>(path: 'settings'),
+  ],
+)
 @immutable
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   /// Creates a [CalendarRoute].
@@ -43,4 +49,15 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SidebarScreen();
+}
+
+/// Settings home route — accessible from the sidebar app bar.
+@immutable
+class SettingsRoute extends GoRouteData with _$SettingsRoute {
+  /// Creates a [SettingsRoute].
+  const SettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SettingsHomeScreen();
 }

@@ -60,14 +60,40 @@ mixin _$ErrorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $calendarRoute =>
-    GoRouteData.$route(path: '/calendar', factory: _$CalendarRoute._fromState);
+RouteBase get $calendarRoute => GoRouteData.$route(
+  path: '/calendar',
+
+  factory: _$CalendarRoute._fromState,
+  routes: [
+    GoRouteData.$route(path: 'settings', factory: _$SettingsRoute._fromState),
+  ],
+);
 
 mixin _$CalendarRoute on GoRouteData {
   static CalendarRoute _fromState(GoRouterState state) => const CalendarRoute();
 
   @override
   String get location => GoRouteData.$location('/calendar');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$SettingsRoute on GoRouteData {
+  static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/calendar/settings');
 
   @override
   void go(BuildContext context) => context.go(location);

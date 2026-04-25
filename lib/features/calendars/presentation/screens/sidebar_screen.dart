@@ -4,6 +4,7 @@ import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/controllers/sidebar_controller.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/controllers/sidebar_state.dart';
 import 'package:twake_calendar_mobile/features/calendars/presentation/widgets/calendar_section.dart';
+import 'package:twake_calendar_mobile/foundation/routing/app_router.dart';
 
 /// Sidebar listing the user's calendars, grouped by section.
 class SidebarScreen extends ConsumerWidget {
@@ -16,7 +17,16 @@ class SidebarScreen extends ConsumerWidget {
         ref.watch(sidebarControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.calendarPersonal)),
+      appBar: AppBar(
+        title: Text(context.l10n.calendarPersonal),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            tooltip: context.l10n.settingsTitle,
+            onPressed: () => const SettingsRoute().push<void>(context),
+          ),
+        ],
+      ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (Object e, StackTrace _) => Center(
