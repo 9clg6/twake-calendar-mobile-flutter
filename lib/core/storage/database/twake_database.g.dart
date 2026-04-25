@@ -2472,6 +2472,8 @@ abstract class _$TwakeDatabase extends GeneratedDatabase {
   late final $OutboxTableTable outboxTable = $OutboxTableTable(this);
   late final $ConflictsTableTable conflictsTable = $ConflictsTableTable(this);
   late final $SyncMetaTableTable syncMetaTable = $SyncMetaTableTable(this);
+  late final OutboxDao outboxDao = OutboxDao(this as TwakeDatabase);
+  late final ConflictDao conflictDao = ConflictDao(this as TwakeDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

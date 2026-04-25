@@ -7,6 +7,7 @@ import 'package:twake_calendar_mobile/features/calendar_view/presentation/contro
 import 'package:twake_calendar_mobile/features/calendar_view/presentation/controllers/month_view_state.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/screens/event_preview_screen.dart';
+import 'package:twake_calendar_mobile/features/sync/sync_providers.dart';
 import 'package:twake_calendar_mobile/foundation/routing/app_router.dart';
 
 /// Calendar layout — month view at the top, agenda of the selected day below.
@@ -33,6 +34,7 @@ class MonthViewScreen extends ConsumerWidget {
             tooltip: context.l10n.searchTitle,
             onPressed: () => const SearchRoute().push<void>(context),
           ),
+          _ConflictsBadge(),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: context.l10n.settingsTitle,
@@ -129,4 +131,20 @@ class _MonthViewBody extends ConsumerWidget {
 
   String _hhmm(DateTime d) =>
       '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+}
+
+class _ConflictsBadge extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final int count = ref.watch(conflictCountProvider).valueOrNull ?? 0;
+    if (count == 0) return const SizedBox.shrink();
+    return IconButton(
+      tooltip: context.l10n.syncConflictsTitle,
+      onPressed: () => const ConflictsRoute().push<void>(context),
+      icon: Badge(
+        label: Text('$count'),
+        child: const Icon(Icons.sync_problem),
+      ),
+    );
+  }
 }

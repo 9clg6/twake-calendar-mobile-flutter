@@ -12,6 +12,7 @@ import 'package:twake_calendar_mobile/features/search/presentation/screens/searc
 import 'package:twake_calendar_mobile/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/error_screen.dart';
 import 'package:twake_calendar_mobile/features/shared/presentation/screens/splash_screen.dart';
+import 'package:twake_calendar_mobile/features/sync/presentation/screens/conflict_resolution_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -84,6 +85,7 @@ class ErrorRoute extends GoRouteData with _$ErrorRoute {
     TypedGoRoute<SidebarRoute>(path: 'sidebar'),
     TypedGoRoute<SearchRoute>(path: 'search'),
     TypedGoRoute<SettingsRoute>(path: 'settings'),
+    TypedGoRoute<ConflictsRoute>(path: 'conflicts'),
   ],
 )
 @immutable
@@ -134,4 +136,15 @@ class SearchRoute extends GoRouteData with _$SearchRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SearchScreen();
+}
+
+/// Conflicts route — pending sync conflicts awaiting user resolution.
+@immutable
+class ConflictsRoute extends GoRouteData with _$ConflictsRoute {
+  /// Creates a [ConflictsRoute].
+  const ConflictsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ConflictResolutionScreen();
 }
