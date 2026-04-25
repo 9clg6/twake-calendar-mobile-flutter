@@ -4,6 +4,8 @@ import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_e
 import 'package:twake_calendar_mobile/features/events/domain/usecases/save_event_usecase.dart';
 import 'package:twake_calendar_mobile/features/events/events_providers.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/controllers/event_form_state.dart';
+import 'package:twake_calendar_mobile/features/notifications/domain/services/local_reminder_service.dart';
+import 'package:twake_calendar_mobile/features/notifications/notifications_providers.dart';
 
 /// Controller of the event create/edit form. The provider is keyed by an
 /// optional [CalendarEventEntity] so create vs edit are two distinct
@@ -54,6 +56,11 @@ final class EventFormController
         state = AsyncData<EventFormState>(
           current.copyWith(isSubmitting: false, didSubmit: true),
         );
+        // Best-effort local reminder scheduling. Silent on failure: we
+        // don't want a notification permission denial to fail the save.
+        final LocalReminderService reminders =
+            ref.read(localReminderServiceProvider);
+        reminders.scheduleFor(entity).catchError((Object _) => null);
         return true;
       },
       failure: (Exception e) {

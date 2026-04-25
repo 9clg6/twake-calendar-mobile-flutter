@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:twake_calendar_mobile/core/network/auth_interceptor.dart';
 import 'package:twake_calendar_mobile/core/network/dio_client.dart';
 import 'package:twake_calendar_mobile/core/network/dio_client_provider.dart';
@@ -10,22 +11,28 @@ import 'package:twake_calendar_mobile/features/auth/auth_providers.dart';
 import 'package:twake_calendar_mobile/features/auth/domain/entities/auth_token.dart';
 import 'package:twake_calendar_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:twake_calendar_mobile/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:twake_calendar_mobile/features/notifications/notifications_providers.dart';
 import 'package:twake_calendar_mobile/features/realtime/presentation/realtime_subscriptions_provider.dart';
 import 'package:twake_calendar_mobile/features/realtime/realtime_providers.dart';
 
 /// One-shot bootstrap provider attaching the authentication + WS-alive
-/// interceptors to the singleton [DioClient] and starting the realtime
-/// bridge.
+/// interceptors to the singleton [DioClient], starting the realtime
+/// bridge, and initializing the timezone database + the local
+/// notifications plugin.
 ///
 /// Watch this provider once at app start (e.g. inside `main.dart` after
 /// runApp, or during the splash screen) so HTTP requests carry a Bearer
-/// token, mutations are gated on the WebSocket being alive, and the
-/// realtime bridge keeps the WS in sync with the auth state.
+/// token, mutations are gated on the WebSocket being alive, the realtime
+/// bridge keeps the WS in sync with the auth state, and reminders can be
+/// scheduled with the right tz offsets.
 final FutureProvider<void> kernelProvider = FutureProvider<void>(
   (Ref<AsyncValue<void>> ref) async {
     final DioClient client = ref.watch(dioClientProvider);
     final AuthRepository authRepository = ref.watch(authRepositoryProvider);
     final TwakeWsClient wsClient = ref.watch(twakeWsClientProvider);
+
+    tz_data.initializeTimeZones();
+    await ref.watch(localNotificationsInitProvider.future);
 
     client.attach(
       AuthInterceptor(
