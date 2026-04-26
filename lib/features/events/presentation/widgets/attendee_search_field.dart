@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:linagora_design_flutter/linagora_design_flutter.dart';
 import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/attendee.dart';
 import 'package:twake_calendar_mobile/features/events/domain/enums/attendee_role.dart';
@@ -144,8 +145,9 @@ class _AttendeeSearchFieldState extends ConsumerState<AttendeeSearchField> {
               itemBuilder: (BuildContext c, int i) {
                 final PersonEntity person = _suggestions[i];
                 return ListTile(
-                  leading: CircleAvatar(
-                    child: Text(_initial(person.displayName)),
+                  leading: RoundAvatar(
+                    text: person.displayName,
+                    size: 32,
                   ),
                   title: Text(person.displayName),
                   subtitle: Text(person.email),
@@ -161,12 +163,11 @@ class _AttendeeSearchFieldState extends ConsumerState<AttendeeSearchField> {
           children: <Widget>[
             for (final AttendeeEntity attendee in widget.attendees)
               InputChip(
-                avatar: CircleAvatar(
-                  child: Text(_initial(
-                    attendee.cn.isNotEmpty
-                        ? attendee.cn
-                        : attendee.calAddress,
-                  )),
+                avatar: RoundAvatar(
+                  text: attendee.cn.isNotEmpty
+                      ? attendee.cn
+                      : attendee.calAddress,
+                  size: 24,
                 ),
                 label: Text(
                   attendee.cn.isNotEmpty ? attendee.cn : attendee.calAddress,
@@ -178,7 +179,4 @@ class _AttendeeSearchFieldState extends ConsumerState<AttendeeSearchField> {
       ],
     );
   }
-
-  String _initial(String value) =>
-      value.isEmpty ? '?' : value.substring(0, 1).toUpperCase();
 }

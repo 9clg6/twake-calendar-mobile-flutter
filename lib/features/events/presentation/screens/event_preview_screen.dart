@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:linagora_design_flutter/linagora_design_flutter.dart';
 import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/attendee.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
@@ -10,6 +11,7 @@ import 'package:twake_calendar_mobile/features/events/domain/usecases/update_par
 import 'package:twake_calendar_mobile/features/events/events_providers.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/extensions/calendar_event_x.dart';
 import 'package:twake_calendar_mobile/features/events/presentation/screens/event_form_screen.dart';
+import 'package:twake_calendar_mobile/features/events/presentation/widgets/ics_source_view.dart';
 
 /// Read-only preview of a [CalendarEventEntity].
 ///
@@ -102,6 +104,8 @@ class EventPreviewScreen extends ConsumerWidget {
             const Gap(16),
             _RsvpButtons(event: event),
           ],
+          const Gap(16),
+          IcsSourceView(event: event),
         ],
       ),
     );
@@ -215,9 +219,9 @@ class _AttendeeRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: <Widget>[
-          CircleAvatar(
-            radius: 16,
-            child: Text(_initial(attendee)),
+          RoundAvatar(
+            text: attendee.cn.isNotEmpty ? attendee.cn : attendee.calAddress,
+            size: 32,
           ),
           const Gap(12),
           Expanded(
@@ -233,11 +237,4 @@ class _AttendeeRow extends StatelessWidget {
     );
   }
 
-  String _initial(AttendeeEntity attendee) {
-    if (attendee.cn.isNotEmpty) return attendee.cn.substring(0, 1).toUpperCase();
-    if (attendee.calAddress.isNotEmpty) {
-      return attendee.calAddress.substring(0, 1).toUpperCase();
-    }
-    return '?';
-  }
 }
