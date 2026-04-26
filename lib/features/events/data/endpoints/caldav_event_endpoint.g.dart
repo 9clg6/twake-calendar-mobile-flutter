@@ -70,14 +70,14 @@ class _CaldavEventEndpoint implements CaldavEventEndpoint {
   }
 
   @override
-  Future<void> putEvent(String path, List<dynamic> jcal) async {
+  Future<void> putEvent(String path, String jcalJson) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
       r'Content-Type': 'text/calendar; charset=utf-8',
     };
     _headers.removeWhere((k, v) => v == null);
-    final _data = jcal.map((e) => e.toJson()).toList();
+    final _data = jcalJson;
     final _options = _setStreamType<void>(
       Options(
             method: 'PUT',

@@ -28,12 +28,14 @@ abstract class CaldavEventEndpoint {
   @GET('/dav{path}')
   Future<dynamic> fetchEvent(@Path('path') String path);
 
-  /// Creates or updates a single event.
+  /// Creates or updates a single event. The body is a JSON string holding
+  /// the jCal payload — passing it as a String avoids retrofit's default
+  /// serializer trying to call `toJson()` on each list element.
   @Headers(<String, String>{'Content-Type': 'text/calendar; charset=utf-8'})
   @PUT('/dav{path}')
   Future<void> putEvent(
     @Path('path') String path,
-    @Body() List<dynamic> jcal,
+    @Body() String jcalJson,
   );
 
   /// Deletes an event.

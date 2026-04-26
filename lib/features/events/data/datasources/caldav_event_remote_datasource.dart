@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:twake_calendar_mobile/features/events/data/endpoints/caldav_event_endpoint.dart';
 import 'package:twake_calendar_mobile/features/events/data/models/event_report.remote_model.dart';
 
@@ -66,7 +68,7 @@ final class CaldavEventRemoteDataSourceImpl
     required String eventPath,
     required List<dynamic> jcal,
   }) async {
-    await _endpoint.putEvent(eventPath, jcal);
+    await _endpoint.putEvent(eventPath, jsonEncode(jcal));
   }
 
   @override
