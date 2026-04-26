@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:twake_calendar_mobile/core/extensions/build_context_x.dart';
+import 'package:twake_calendar_mobile/core/theme/color_tokens.dart';
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
 
 /// Generic time grid widget used by both Day and Week views.
@@ -77,17 +78,55 @@ class _DaysHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 96,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          SizedBox(width: hourLabelWidth),
+          // Left gutter — Week number + UTC offset (matches the web mobile).
+          SizedBox(
+            width: hourLabelWidth,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Week ${_weekNumber(days.first)}',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: ColorTokens.textTertiary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Gap(2),
+                Text(
+                  _utcOffset(),
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: ColorTokens.twakeOrange,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
           for (final DateTime day in days)
             Expanded(
-              child: Center(
-                child: Text(
-                  '${_weekdayShort(context, day)} ${day.day}',
-                  style: context.textTheme.bodyLarge,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '${day.day}',
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: ColorTokens.textTertiary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Gap(4),
+                  Text(
+                    _weekdayShort(day),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: ColorTokens.textMuted,
+                      letterSpacing: 0.6,
+                    ),
+                  ),
+                ],
               ),
             ),
         ],
@@ -95,17 +134,36 @@ class _DaysHeader extends StatelessWidget {
     );
   }
 
-  String _weekdayShort(BuildContext context, DateTime day) {
+  static String _weekdayShort(DateTime day) {
     const List<String> labels = <String>[
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat',
-      'Sun',
+      'MON.',
+      'TUE.',
+      'WED.',
+      'THU.',
+      'FRI.',
+      'SAT.',
+      'SUN.',
     ];
     return labels[day.weekday - 1];
+  }
+
+  /// ISO 8601 week number — Monday-based, fits the web "Semaine N" label.
+  static int _weekNumber(DateTime d) {
+    final DateTime thursday =
+        d.add(Duration(days: 4 - (d.weekday == 0 ? 7 : d.weekday)));
+    final DateTime firstThursday =
+        DateTime(thursday.year, 1, 4).add(Duration(days: 4 -
+            (DateTime(thursday.year, 1, 4).weekday == 0
+                ? 7
+                : DateTime(thursday.year, 1, 4).weekday)));
+    return 1 + thursday.difference(firstThursday).inDays ~/ 7;
+  }
+
+  static String _utcOffset() {
+    final Duration offset = DateTime.now().timeZoneOffset;
+    final String sign = offset.isNegative ? '-' : '+';
+    final int hours = offset.inHours.abs();
+    return 'UTC$sign$hours';
   }
 }
 
@@ -283,32 +341,42 @@ class _PositionedEvent extends StatelessWidget {
       height: height.clamp(20.0, hourHeight * 24),
       child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           decoration: BoxDecoration(
-            color: context.colorScheme.primary.withValues(alpha: .8),
-            borderRadius: BorderRadius.circular(4),
+            color: const Color(0xFFD8F1DD),
+            borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                event.title ?? '',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colorScheme.onPrimary,
-                  fontWeight: FontWeight.w600,
+          child: ClipRect(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  _hhmm(start),
+                  style: const TextStyle(
+                    color: Color(0xFF1B7F3A),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                    height: 1.1,
+                  ),
                 ),
-              ),
-              const Gap(2),
-              Text(
-                '${_hhmm(start)} – ${_hhmm(end)}',
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colorScheme.onPrimary,
+                const Gap(6),
+                Expanded(
+                  child: Text(
+                    event.title ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xFF1B7F3A),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      height: 1.2,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

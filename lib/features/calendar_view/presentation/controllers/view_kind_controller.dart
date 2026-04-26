@@ -7,7 +7,7 @@ import 'package:twake_calendar_mobile/features/calendar_view/domain/enums/calend
 /// reading/writing through PreferencesStorage.
 final class ViewKindController extends Notifier<CalendarViewKind> {
   @override
-  CalendarViewKind build() => CalendarViewKind.month;
+  CalendarViewKind build() => CalendarViewKind.day;
 
   /// Switches to [next].
   void switchTo(CalendarViewKind next) => state = next;
