@@ -65,6 +65,14 @@ dependencies:
   gap: ^3.0.1
   table_calendar: ^3.1.2
 
+  # Linagora design system (Twake-on-Matrix shared widgets) — provides
+  # RoundAvatar, dialog helpers, palette refs and text styles aligned with
+  # the rest of the Linagora portfolio.
+  linagora_design_flutter:
+    git:
+      url: https://github.com/linagora/linagora-design-flutter.git
+      ref: master
+
   # Utilities
   collection: ^1.18.0
   meta: ^1.16.0
@@ -90,11 +98,22 @@ dev_dependencies:
   mocktail: ^1.0.4
   integration_test:
     sdk: flutter
-  patrol: ^3.13.0
-  patrol_finders: ^2.5.0
+  patrol: ^4.5.0
+  patrol_finders: ^3.2.0
 
 flutter:
   uses-material-design: true
   generate: true
   assets:
     - assets/images/
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/InterVariable.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Variable.ttf
+    - family: CalSans
+      fonts:
+        - asset: assets/fonts/CalSans-SemiBold.ttf
+          weight: 600

@@ -1,0 +1,6 @@
+patrol:
+  app_name: Twake Calendar
+  android:
+    package_name: com.example.twake_calendar_mobile
+  ios:
+    bundle_id: com.example.twakeCalendarMobile
