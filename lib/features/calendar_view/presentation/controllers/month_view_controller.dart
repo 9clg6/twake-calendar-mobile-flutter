@@ -7,6 +7,9 @@ import 'package:twake_calendar_mobile/features/calendars/domain/usecases/get_cal
 import 'package:twake_calendar_mobile/features/events/domain/entities/calendar_event.dart';
 import 'package:twake_calendar_mobile/features/events/domain/usecases/get_events_in_range_usecase.dart';
 import 'package:twake_calendar_mobile/features/events/events_providers.dart';
+import 'package:twake_calendar_mobile/features/events/presentation/controllers/debug_events_controller.dart';
+import 'package:twake_calendar_mobile/features/notifications/domain/services/local_reminder_service.dart';
+import 'package:twake_calendar_mobile/features/notifications/notifications_providers.dart';
 
 /// Controller of the month view.
 ///
@@ -20,7 +23,9 @@ final class MonthViewController extends AsyncNotifier<MonthViewState> {
   Future<MonthViewState> build() async {
     _getCalendarsUseCase = ref.watch(getCalendarsUseCaseProvider);
     _getEventsUseCase = ref.watch(getEventsInRangeUseCaseProvider);
-    return _loadForMonth(DateTime.now());
+    // Re-render when the debug bar injects or clears events.
+    ref.watch(debugEventsControllerProvider);
+    return _loadForMonth(state.valueOrNull?.focusedMonth ?? DateTime.now());
   }
 
   /// Switches the focused month and refreshes events.
@@ -38,6 +43,7 @@ final class MonthViewController extends AsyncNotifier<MonthViewState> {
   }
 
   Future<MonthViewState> _loadForMonth(DateTime any) async {
+    final DateTime now = DateTime.now();
     final DateTime focused = DateTime(any.year, any.month);
     final DateTime start = DateTime(focused.year, focused.month - 1, 25);
     final DateTime end = DateTime(focused.year, focused.month + 1, 7);
@@ -65,6 +71,10 @@ final class MonthViewController extends AsyncNotifier<MonthViewState> {
       );
     }
 
+    // Merge synthetic events injected from the debug bar so they surface
+    // in the agenda exactly like real ones.
+    events.addAll(ref.read(debugEventsControllerProvider));
+
     final Map<DateTime, List<CalendarEventEntity>> byDay =
         <DateTime, List<CalendarEventEntity>>{};
     for (final CalendarEventEntity event in events) {
@@ -72,6 +82,17 @@ final class MonthViewController extends AsyncNotifier<MonthViewState> {
       final DateTime key =
           DateTime(startDate.year, startDate.month, startDate.day);
       byDay.putIfAbsent(key, () => <CalendarEventEntity>[]).add(event);
+    }
+
+    // Schedule a local reminder 5 minutes before each upcoming event.
+    final LocalReminderService reminders =
+        ref.read(localReminderServiceProvider);
+    await ref.read(localNotificationsInitProvider.future);
+    for (final CalendarEventEntity event in events) {
+      final DateTime startTime = DateTime.parse(event.start);
+      if (startTime.isAfter(now)) {
+        await reminders.scheduleDefaultFor(event);
+      }
     }
 
     return MonthViewState(

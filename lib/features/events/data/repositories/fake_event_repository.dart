@@ -15,37 +15,48 @@ final class FakeEventRepository implements EventRepository {
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 120));
     final List<CalendarEventEntity> events = <CalendarEventEntity>[];
+    final DateTime now = DateTime.now();
     DateTime cursor = DateTime(start.year, start.month, start.day);
     int index = 0;
+    const List<({int hour, int duration, String title})> dailyAgenda =
+        <({int hour, int duration, String title})>[
+      (hour: 10, duration: 1, title: 'Twake Chat daily'),
+      (hour: 14, duration: 1, title: 'figma to design system'),
+    ];
     while (cursor.isBefore(end)) {
-      // 2 events on weekdays only.
-      if (cursor.weekday != DateTime.saturday &&
-          cursor.weekday != DateTime.sunday) {
+      for (final ({int hour, int duration, String title}) slot
+          in dailyAgenda) {
         events.add(
           CalendarEventEntity(
-            uid: 'fake-$calendarId-$index-am',
+            uid: 'fake-$calendarId-$index-${slot.hour}',
             calId: calendarId,
-            url: '/dav/calendars/me/$calendarId.json/fake-$index-am.ics',
-            start: _iso(cursor.add(const Duration(hours: 9))),
-            end: _iso(cursor.add(const Duration(hours: 10))),
+            url: '/dav/calendars/me/$calendarId.json/fake-$index-${slot.hour}.ics',
+            start: _iso(cursor.add(Duration(hours: slot.hour, minutes: 30))),
+            end: _iso(cursor.add(Duration(hours: slot.hour + slot.duration))),
             timezone: 'Europe/Paris',
-            title: 'Stand-up',
-          ),
-        );
-        events.add(
-          CalendarEventEntity(
-            uid: 'fake-$calendarId-$index-pm',
-            calId: calendarId,
-            url: '/dav/calendars/me/$calendarId.json/fake-$index-pm.ics',
-            start: _iso(cursor.add(const Duration(hours: 14))),
-            end: _iso(cursor.add(const Duration(hours: 15))),
-            timezone: 'Europe/Paris',
-            title: 'Design review',
+            title: slot.title,
           ),
         );
       }
       cursor = cursor.add(const Duration(days: 1));
       index += 1;
+    }
+    // Demo nicety: also surface a "starting in 7 minutes" event today so
+    // the local-reminder pipeline can be exercised live during the demo.
+    if (start.isBefore(now) && end.isAfter(now)) {
+      final DateTime soon = now.add(const Duration(minutes: 7));
+      events.add(
+        CalendarEventEntity(
+          uid: 'fake-$calendarId-soon',
+          calId: calendarId,
+          url: '/dav/calendars/me/$calendarId.json/fake-soon.ics',
+          start: _iso(soon),
+          end: _iso(soon.add(const Duration(minutes: 30))),
+          timezone: 'Europe/Paris',
+          title: 'Demo reminder',
+          location: 'You should get a notification 5 min before',
+        ),
+      );
     }
     return events;
   }
